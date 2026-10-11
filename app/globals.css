@@ -2,7 +2,16 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --primary: #00cfff;
+  --secondary: #245bff;
+  --tertiary: #7000ff;
+  --gradient-primary: linear-gradient(
+    110deg,
+    var(--tertiary) 0%,
+    var(--secondary) 48%,
+    var(--primary) 100%
+  );
 }
 
 @theme inline {
@@ -14,8 +23,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1e1e1e;
+    --foreground: #ffffff;
+    --primary: #00cfff;
+    --secondary: #245bff;
+    --tertiary: #7000ff;
   }
 }
 
