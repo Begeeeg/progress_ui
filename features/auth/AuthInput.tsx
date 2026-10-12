@@ -1,17 +1,7 @@
 "use client";
 
-import { useState, type ChangeEventHandler } from "react";
-
-type AuthInputProps = {
-  id: string;
-  label: string;
-  type?: string;
-  autoComplete?: string;
-  placeholder?: string;
-  required?: boolean;
-  value: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-};
+import { useState } from "react";
+import { AuthInputProps } from "./types/auth.types";
 
 export default function AuthInput({
   id,

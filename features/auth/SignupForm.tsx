@@ -4,6 +4,8 @@ import { useState } from "react";
 import AuthInput from "./AuthInput";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { registerUser } from "./api/auth.api";
+import { buttonVariants } from "@/shared/components/ui/Button";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -36,33 +38,10 @@ export default function SignupForm() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/register`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: formData.username,
-            givenname: formData.givenname,
-            surname: formData.surname,
-            email: formData.email,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Signup failed");
-      }
+      const data = await registerUser(formData);
 
       toast.success(data.message || "Account created successfully!");
-      router.push("/home");
+      router.replace("/verify-email");
     } catch (error) {
       console.error(error);
       toast.error(error instanceof Error ? error.message : "Signup failed");
@@ -143,7 +122,7 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-emerald px-4 py-2.5 font-body font-semibold text-canvas transition-colors hover:bg-emerald-dark disabled:cursor-not-allowed disabled:opacity-60"
+        className={buttonVariants.default}
       >
         {submitting ? "Creating your account..." : "Create account"}
       </button>

@@ -16,14 +16,14 @@ export default async function SignupPage() {
   const token = cookieStore.get("jwt");
 
   if (token) {
-    redirect("/home");
+    redirect("/verify-email");
   }
 
   return (
     <AuthCard
       eyebrow="your goals · your growth"
       title="Start making Progress"
-      subtitle="Create your account and turn your goals into achievements."
+      subtitle="Create your account, then verify your email to open your workspace."
       footer={
         <>
           Already have an account?{" "}

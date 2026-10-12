@@ -1,12 +1,4 @@
-import type { ReactNode } from "react";
-
-type AuthCardProps = {
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-  children: ReactNode;
-  footer: ReactNode;
-};
+import { AuthCardProps } from "./types/auth.types";
 
 export default function AuthCard({
   eyebrow,

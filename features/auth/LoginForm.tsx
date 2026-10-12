@@ -5,6 +5,7 @@ import { useState } from "react";
 import AuthInput from "./AuthInput";
 import { toast } from "sonner";
 import { buttonVariants } from "@/shared/components/ui/Button";
+import { loginUser } from "./api/auth.api";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -29,30 +30,10 @@ export default function LoginForm() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/login`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Log in failed");
-      }
+      const data = await loginUser(formData);
 
       toast.success(data.message || "Log in successfully!");
-
-      router.push("/home");
+      router.replace(data.data?.isVerified === false ? "/verify-email" : "/home");
     } catch (error) {
       console.error(error);
       toast.error(error instanceof Error ? error.message : "Log in failed");
