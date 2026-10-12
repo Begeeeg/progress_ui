@@ -53,6 +53,51 @@ export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
   return readAuthResponse(response);
 }
 
+export async function verifyEmail(token: string): Promise<AuthResponse> {
+  try {
+    const response = await fetch(
+      `${authEndpoint("verify-email")}?token=${encodeURIComponent(token)}`,
+      {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
+    return await readAuthResponse(response);
+  } catch (verificationError) {
+    try {
+      const profileResponse = await fetch(apiEndpoint("user", "me"), {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (profileResponse.ok) {
+        const profile = (await profileResponse.json()) as {
+          data?: { isVerified?: boolean };
+        };
+        if (profile.data?.isVerified === true) {
+          return {
+            message: "Your email is verified. You can continue to Progress.",
+          };
+        }
+      }
+    } catch {
+      // Keep the verification error below; the status check is only a recovery
+      // path for cases where the token was consumed but the response failed.
+    }
+
+    throw verificationError;
+  }
+}
+
+export async function resendVerificationEmail(): Promise<AuthResponse> {
+  const response = await fetch(authEndpoint("resend-verification"), {
+    method: "POST",
+    credentials: "include",
+    cache: "no-store",
+  });
+  return readAuthResponse(response);
+}
+
 export async function logoutUser() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/logout`,
