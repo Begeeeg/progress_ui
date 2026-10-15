@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import AuthInput from "./AuthInput";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { registerUser } from "./api/auth.api";
-import { buttonVariants } from "@/shared/components/ui/Button";
+import { toast } from "sonner";
+import { Button } from "@/shared/components/ui/Button";
+import AuthInput from "./AuthInput";
+import { registerUser } from "../api/auth.api";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -16,35 +16,30 @@ export default function SignupForm() {
     password: "",
     confirmPassword: "",
   });
-
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((previous) => ({
+      ...previous,
+      [event.target.name]: event.target.value,
     }));
   };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
 
     setSubmitting(true);
-
     try {
-      const data = await registerUser(formData);
-
-      toast.success(data.message || "Account created successfully!");
+      const response = await registerUser(formData);
+      toast.success(response.message || "Account created successfully.");
       router.replace("/verify-email");
-    } catch (error) {
-      console.error(error);
-      toast.error(error instanceof Error ? error.message : "Signup failed");
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Signup failed.");
     } finally {
       setSubmitting(false);
     }
@@ -56,76 +51,70 @@ export default function SignupForm() {
         id="username"
         label="Username"
         autoComplete="username"
-        placeholder="Enter your username"
+        placeholder="Choose a username"
+        minLength={3}
+        maxLength={15}
         value={formData.username}
         onChange={handleChange}
       />
-
       <AuthInput
         id="givenname"
-        label="Given Name"
-        autoComplete="givenname"
-        placeholder="Enter your given name"
+        label="Given name"
+        autoComplete="given-name"
+        placeholder="Your first name"
+        minLength={3}
+        maxLength={15}
         value={formData.givenname}
         onChange={handleChange}
       />
-
       <AuthInput
         id="surname"
         label="Surname"
-        autoComplete="surname"
-        placeholder="Enter your surname"
+        autoComplete="family-name"
+        placeholder="Your last name"
+        minLength={3}
+        maxLength={15}
         value={formData.surname}
         onChange={handleChange}
       />
-
       <AuthInput
         id="email"
         label="Email"
         type="email"
         autoComplete="email"
         placeholder="you@example.com"
+        title="Use a Gmail, Yahoo, or Outlook email address."
         value={formData.email}
         onChange={handleChange}
       />
-
       <AuthInput
         id="password"
         label="Password"
         type="password"
         autoComplete="new-password"
-        placeholder="Enter Password"
+        placeholder="Create a password"
+        minLength={8}
+        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+"
+        title="Use at least 8 characters with an uppercase letter, lowercase letter, and number."
         value={formData.password}
         onChange={handleChange}
       />
-
       <AuthInput
         id="confirmPassword"
-        label="Confirm Password"
+        label="Confirm password"
         type="password"
         autoComplete="new-password"
-        placeholder="Confirm Password"
+        placeholder="Enter your password again"
+        minLength={8}
         value={formData.confirmPassword}
         onChange={handleChange}
       />
-
-      <label className="flex items-start gap-2 font-body text-xs text-ink-dim">
-        <input
-          type="checkbox"
-          name="terms"
-          required
-          className="mt-0.5 h-4 w-4 rounded border-line bg-surface-soft accent-emerald"
-        />
-        I agree to the Terms of Service and Privacy Policy.
-      </label>
-
-      <button
-        type="submit"
-        disabled={submitting}
-        className={buttonVariants.default}
-      >
+      <p className="text-xs leading-5 text-ink-dim">
+        Only Gmail, Yahoo, and Outlook addresses are currently supported.
+      </p>
+      <Button type="submit" disabled={submitting} className="w-full">
         {submitting ? "Creating your account..." : "Create account"}
-      </button>
+      </Button>
     </form>
   );
 }

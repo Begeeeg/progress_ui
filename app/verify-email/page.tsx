@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import VerifyEmailScreen from "@/features/auth/VerifyEmailScreen";
+import VerifyEmailScreen from "@/features/auth/components/VerifyEmailScreen";
 
 export const metadata: Metadata = {
   title: "Verify your email — Progress",

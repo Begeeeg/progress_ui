@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import AuthCard from "@/features/auth/AuthCard";
-import LoginForm from "@/features/auth/LoginForm";
+import AuthCard from "@/features/auth/components/AuthCard";
+import LoginForm from "@/features/auth/components/LoginForm";
+import requireCurrentUser from "@/features/users/server/require-current-user";
 
 export const metadata: Metadata = {
   title: "Log in — Progress",
@@ -16,7 +17,8 @@ export default async function Page() {
   const token = cookieStore.get("jwt");
 
   if (token) {
-    redirect("/home");
+    const user = await requireCurrentUser();
+    redirect(user.isVerified ? "/home" : "/verify-email");
   }
 
   return (

@@ -11,7 +11,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import AuthCard from "./AuthCard";
-import { resendVerificationEmail, verifyEmail } from "./api/auth.api";
+import { resendVerificationEmail, verifyEmail } from "../api/auth.api";
 
 type VerificationState = "waiting" | "verifying" | "verified" | "failed";
 
@@ -198,7 +198,7 @@ export default function VerifyEmailScreen({
               router.replace("/home");
               router.refresh();
             }}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-(image:--gradient-primary) px-4 py-3 font-semibold text-black transition hover:brightness-110"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-(image:--gradient-primary) px-4 py-3 font-semibold text-white transition hover:brightness-110"
           >
             Continue to your workspace <ArrowRight size={17} />
           </button>

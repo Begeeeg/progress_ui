@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AuthInputProps } from "./types/auth.types";
+import { AuthInputProps } from "../types/auth.types";
 
 export default function AuthInput({
   id,
@@ -12,6 +12,10 @@ export default function AuthInput({
   required = true,
   value,
   onChange,
+  minLength,
+  maxLength,
+  pattern,
+  title,
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
@@ -19,7 +23,7 @@ export default function AuthInput({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="font-body text-sm font-medium text-ink/85">
+      <label htmlFor={id} className="text-sm font-medium text-ink">
         {label}
       </label>
 
@@ -31,16 +35,19 @@ export default function AuthInput({
           autoComplete={autoComplete}
           placeholder={placeholder}
           required={required}
+          minLength={minLength}
+          maxLength={maxLength}
+          pattern={pattern}
+          title={title}
           value={value}
           onChange={onChange}
-          className="w-full rounded-md border border-line bg-surface-soft px-3.5 py-2.5 pr-10 font-body text-sm text-ink placeholder:text-ink-dim/70 focus:border-emerald focus:outline-none focus:ring-2 focus:ring-emerald/20"
+          className="w-full rounded-xl border border-line bg-canvas px-3.5 py-2.5 pr-10 text-sm text-ink placeholder:text-ink-dim/70 focus:border-(--secondary) focus:outline-none focus:ring-2 focus:ring-(--secondary)/15"
         />
 
         {isPassword && (
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            tabIndex={-1}
             aria-label={showPassword ? "Hide password" : "Show password"}
             className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-dim hover:text-ink"
           >

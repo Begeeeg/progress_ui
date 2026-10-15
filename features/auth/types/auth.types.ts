@@ -31,6 +31,10 @@ export interface AuthInputProps {
   autoComplete?: string;
   placeholder?: string;
   required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  title?: string;
   value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
 }

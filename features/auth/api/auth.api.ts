@@ -3,6 +3,7 @@ import {
   LoginPayload,
   RegisterPayload,
 } from "../types/auth.types";
+import { apiRequest } from "@/shared/lib/api-client";
 
 function apiEndpoint(feature: "auth" | "user", path: string) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
@@ -17,14 +18,25 @@ function authEndpoint(path: string) {
   return apiEndpoint("auth", path);
 }
 
-async function readAuthResponse(response: Response): Promise<AuthResponse> {
+async function readAuthResponse(
+  response: Response,
+  expectsData = false,
+): Promise<AuthResponse> {
   const data = (await response.json().catch(() => null)) as AuthResponse | null;
 
   if (!response.ok) {
     throw new Error(data?.message || `Request failed (${response.status})`);
   }
 
-  return data ?? { message: "Request completed successfully." };
+  if (
+    !data ||
+    typeof data.message !== "string" ||
+    (expectsData && !data.data)
+  ) {
+    throw new Error("The server returned an invalid authentication response.");
+  }
+
+  return data;
 }
 
 export async function registerUser(
@@ -38,7 +50,7 @@ export async function registerUser(
     },
     body: JSON.stringify(payload),
   });
-  return readAuthResponse(response);
+  return readAuthResponse(response, true);
 }
 
 export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
@@ -50,7 +62,7 @@ export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
     },
     body: JSON.stringify(payload),
   });
-  return readAuthResponse(response);
+  return readAuthResponse(response, true);
 }
 
 export async function verifyEmail(token: string): Promise<AuthResponse> {
@@ -99,15 +111,5 @@ export async function resendVerificationEmail(): Promise<AuthResponse> {
 }
 
 export async function logoutUser() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/logout`,
-    {
-      method: "POST",
-      credentials: "include",
-    },
-  );
-
-  if (!response.ok) {
-    console.error("Logout request failed:", response.status);
-  }
+  return apiRequest<null>("identity/auth/logout", { method: "POST" }, false);
 }
