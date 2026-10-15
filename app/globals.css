@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  color-scheme: light;
+  --background: #f7f8fc;
+  --foreground: #15172b;
   --primary: #00cfff;
   --secondary: #245bff;
   --tertiary: #7000ff;
+  --canvas: #f7f8fc;
+  --surface: #ffffff;
+  --surface-soft: #f1f3f9;
+  --ink: #15172b;
+  --ink-dim: #68708a;
+  --line: #e4e7f0;
+  --emerald: #245bff;
+  --emerald-dark: #1747db;
   --gradient-primary: linear-gradient(
     110deg,
     var(--tertiary) 0%,
@@ -17,22 +26,40 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-line: var(--line);
+  --color-emerald: var(--emerald);
+  --color-emerald-dark: var(--emerald-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1e1e1e;
-    --foreground: #ffffff;
-    --primary: #00cfff;
-    --secondary: #245bff;
-    --tertiary: #7000ff;
+    color-scheme: dark;
+    --background: #10111b;
+    --foreground: #f5f6fc;
+    --canvas: #10111b;
+    --surface: #191b28;
+    --surface-soft: #222537;
+    --ink: #f5f6fc;
+    --ink-dim: #a1a7bb;
+    --line: #303348;
+    --emerald: #5f88ff;
+    --emerald-dark: #8daaff;
   }
+}
+
+* {
+  border-color: var(--line);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
