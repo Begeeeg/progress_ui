@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { buttonVariants } from "../ui/Button";
+import { ButtonLink } from "../ui/Button";
 
 const sections = [
   { id: "features", label: "Features" },
   { id: "how-it-works", label: "How it works" },
-  { id: "developer", label: "Developer" },
+  { id: "purpose", label: "Purpose" },
 ];
 
 export default function Navbar() {
@@ -20,7 +20,7 @@ export default function Navbar() {
           {sections.map((s) => (
             <a
               key={s.id}
-              href={s.id}
+              href={`#${s.id}`}
               className="transition-colors hover:text-(--secondary)"
             >
               {s.label}
@@ -28,10 +28,14 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
-          <Link href="/login" className={buttonVariants.default}>
-            Get Started
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="hidden text-sm font-semibold text-ink-dim transition hover:text-(--secondary) sm:inline"
+          >
+            Log in
           </Link>
+          <ButtonLink href="/signup">Get started</ButtonLink>
         </div>
       </div>
     </header>
