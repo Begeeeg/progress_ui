@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Progress UI
 
-## Getting Started
+Progress UI is a Next.js frontend organized around user-facing features. This
+keeps related screens, components, API calls, and types together so the app can
+be extended one working feature at a time.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set `NEXT_PUBLIC_API_URL` to the Progress API base URL before starting the
+frontend. Use `pnpm run lint`, `pnpm exec tsc --noEmit`, and `pnpm run build` to
+check changes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Source structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+app/                         Next.js routes and route-level metadata
+features/
+  auth/                      Sign-in, sign-up, and verification
+  accounts/                  Connected-account display and management
+  home/                      Dashboard header, account menu, and search
+  landing/                    Public landing-page sections
+  progress/
+    projects/                Project screens, API, hook, server, and types
+    tasks/                   Task screens, API, utilities, and types
+  users/                     User profile, settings, and search
+  legal/                     Privacy policy and terms content
+  documentation/             User guide content and page components
+shared/
+  components/
+    layout/                  App-wide page layouts
+    ui/                      Reusable, domain-independent UI
+  lib/                       Shared infrastructure, such as the API client
+```
 
-## Learn More
+The user-facing application guide is available at `/documentation`. It
+describes current features, workflows, access behavior, and known limitations.
 
-To learn more about Next.js, take a look at the following resources:
+### Ownership rules
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Keep `app/` route files thin: read route parameters, load route-level data,
+  set metadata, and compose feature UI. Put feature behavior in `features/`.
+- Keep a feature's components, API functions, types, hooks, server helpers, and
+  utilities within that feature. Keep project-specific and task-specific code
+  within their corresponding progress subfeature.
+- Put something in `shared/` only when it is reusable across unrelated
+  features. Shared UI should not own feature-specific API or business rules.
+- Import across feature boundaries through explicit paths. Avoid creating
+  barrel files that hide module ownership or introduce broad imports.
+- Keep types near the feature that owns the data. Reuse or depend on another
+  feature's public types only when the domain relationship is real.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Delivering features incrementally
 
-## Deploy on Vercel
+Use Agile iterations to deliver small, usable vertical slices, rather than
+creating folders for sprints. For each story, agree on observable acceptance
+criteria, implement the route/UI and its API or data behavior together, verify
+loading/empty/error/success states, and review the slice before moving on.
+Prefer small changes that leave the application buildable at each step.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before merging a slice, run the relevant checks:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm run lint
+pnpm exec tsc --noEmit
+pnpm run build
+```
