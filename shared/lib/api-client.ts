@@ -4,9 +4,23 @@ export interface ApiResponse<T> {
 }
 
 export function getApiUrl(path: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+  const publicBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+  const backend = process.env.BACKEND_URL?.replace(/\/+$/, "");
+
+  // A relative base like "/api/v1" only resolves in the browser.
+  // On the server there is no origin, so call the backend directly.
+  const isServer = typeof window === "undefined";
+  const baseUrl =
+    isServer && publicBase?.startsWith("/")
+      ? backend
+        ? `${backend}${publicBase}`
+        : undefined
+      : publicBase;
+
   if (!baseUrl) {
-    throw new Error("NEXT_PUBLIC_API_URL is not configured.");
+    throw new Error(
+      "API base URL is not configured (NEXT_PUBLIC_API_URL / BACKEND_URL).",
+    );
   }
 
   return `${baseUrl}/${path.replace(/^\/+/, "")}`;
@@ -27,9 +41,9 @@ export async function apiRequest<T>(
     },
   });
 
-  const payload = (await response.json().catch(() => null)) as
-    | Partial<ApiResponse<T>>
-    | null;
+  const payload = (await response.json().catch(() => null)) as Partial<
+    ApiResponse<T>
+  > | null;
 
   if (!response.ok) {
     throw new Error(
