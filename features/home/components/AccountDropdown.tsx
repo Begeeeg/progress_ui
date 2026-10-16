@@ -35,7 +35,7 @@ export default function AccountDropdown({ username }: { username?: string }) {
 
     try {
       await logoutUser();
-      router.replace("/login");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       toast.error(
