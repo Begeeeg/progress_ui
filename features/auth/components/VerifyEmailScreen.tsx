@@ -11,7 +11,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 import AuthCard from "./AuthCard";
-import { resendVerificationEmail, verifyEmail } from "../api/auth.api";
+import {
+  logoutUser,
+  resendVerificationEmail,
+  verifyEmail,
+} from "../api/auth.api";
+import { toast } from "sonner";
 
 type VerificationState = "waiting" | "verifying" | "verified" | "failed";
 
@@ -91,6 +96,18 @@ export default function VerifyEmailScreen({
     }
   }
 
+  async function handleLogout() {
+    try {
+      await logoutUser();
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Could not log out.",
+      );
+    }
+  }
+
   const verified = state === "verified";
   const verifying = state === "verifying";
 
@@ -115,13 +132,23 @@ export default function VerifyEmailScreen({
       }
       footer={
         <>
-          {verified ? "Ready to continue?" : "Already verified?"}{" "}
-          <Link
-            href={verified ? "/home" : "/login"}
-            className="font-medium text-(--secondary) hover:text-(--primary)"
-          >
-            {verified ? "Open Progress" : "Log in"}
-          </Link>
+          {verified ? "Ready to continue?" : "Want to sign out?"}{" "}
+          {verified ? (
+            <Link
+              href="/home"
+              className="font-medium text-(--secondary) hover:text-(--primary)"
+            >
+              Open Progress
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="font-medium text-(--secondary) hover:text-(--primary)"
+            >
+              Log out
+            </button>
+          )}
         </>
       }
     >
