@@ -23,14 +23,15 @@ export default function AccountSettingsPageContent({
 
     return (
         <DashboardLayout username={user.username}>
-            <div className="space-y-8">
+            <div className="min-w-0 space-y-8">
                 <PageHeading
                     eyebrow="Your account"
                     title="Settings"
                     description="Everything you need to manage your account, organized in one place."
                 />
-                <div className="grid items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
-                    <aside className="lg:sticky lg:top-24">
+
+                <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
+                    <aside className="min-w-0 lg:sticky lg:top-24">
                         <SettingsNavigation
                             activeSection={activeSection}
                             onSectionChange={setActiveSection}

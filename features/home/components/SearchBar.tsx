@@ -67,7 +67,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className="relative mx-3 w-full max-w-xl" ref={searchRef}>
+        <div className="relative mx-1 min-w-0 max-w-xl flex-1 sm:mx-3" ref={searchRef}>
             <label htmlFor="people-search" className="sr-only">
                 Search Progress users
             </label>

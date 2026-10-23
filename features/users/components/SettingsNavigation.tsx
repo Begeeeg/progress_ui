@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
-import { Globe2, LockKeyhole, ShieldAlert, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  ChevronDown,
+  Globe2,
+  LockKeyhole,
+  Menu,
+  ShieldAlert,
+  UserRound,
+} from "lucide-react";
 
 export const settingsSections = [
   {
@@ -39,6 +46,8 @@ export default function SettingsNavigation({
   activeSection: SettingsSectionId;
   onSectionChange: (section: SettingsSectionId) => void;
 }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   useEffect(() => {
     const targets = settingsSections
       .map(({ id }) => document.getElementById(id))
@@ -63,12 +72,39 @@ export default function SettingsNavigation({
     return () => observer.disconnect();
   }, [onSectionChange]);
 
+  const activeLabel =
+    settingsSections.find(({ id }) => id === activeSection)?.label ??
+    "Settings menu";
+
   return (
-    <nav aria-label="Settings sections">
+    <nav aria-label="Settings sections" className="relative min-w-0">
+      <button
+        type="button"
+        aria-controls="settings-section-list"
+        aria-expanded={isMenuOpen}
+        onClick={() => setIsMenuOpen((open) => !open)}
+        className="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-line bg-surface px-3 py-2.5 text-left text-ink lg:hidden"
+      >
+        <Menu size={18} className="shrink-0 text-(--secondary)" />
+        <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+          {activeLabel}
+        </span>
+        <ChevronDown
+          size={18}
+          className={`shrink-0 text-ink-dim transition-transform ${
+            isMenuOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
       <p className="mb-3 hidden px-3 text-xs font-bold uppercase tracking-[0.14em] text-ink-dim lg:block">
         Settings menu
       </p>
-      <ul className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
+      <ul
+        id="settings-section-list"
+        className={`absolute left-0 right-0 top-full z-20 mt-2 flex-col gap-2 rounded-2xl border border-line bg-surface p-2 shadow-lg lg:static lg:mt-0 lg:flex lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none ${
+          isMenuOpen ? "flex" : "hidden"
+        }`}
+      >
         {settingsSections.map(({ id, label, description, icon: Icon }, index) => {
           const active = activeSection === id;
           return (
@@ -77,8 +113,11 @@ export default function SettingsNavigation({
                 type="button"
                 aria-current={active ? "page" : undefined}
                 aria-pressed={active}
-                onClick={() => onSectionChange(id)}
-                className={`group flex min-h-12 items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition lg:w-full lg:border-transparent ${
+                onClick={() => {
+                  onSectionChange(id);
+                  setIsMenuOpen(false);
+                }}
+                className={`group flex min-h-12 w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition lg:border-transparent ${
                   active
                     ? "border-(--secondary)/15 bg-(--secondary)/8 text-(--secondary) lg:border-(--secondary)/15"
                     : "border-line bg-surface text-ink-dim hover:border-(--secondary)/20 hover:bg-surface"
