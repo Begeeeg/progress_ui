@@ -6,7 +6,7 @@ import AccountDropdown from "./AccountDropdown";
 export default function HomeHeader({ username }: { username?: string }) {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-canvas/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-4 sm:gap-4 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6">
         <Link
           href="/home"
           aria-label="Progress home"
