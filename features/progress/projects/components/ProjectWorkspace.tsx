@@ -164,8 +164,8 @@ export default function ProjectWorkspace({ userName }: { userName: string }) {
                                         <Button
                                             onClick={() => setShowForm(true)}
                                         >
-                                            <Plus size={16} /> Create your
-                                            first project
+                                            <Plus size={16} /> Create your first
+                                            project
                                         </Button>
                                     ) : undefined
                                 }
