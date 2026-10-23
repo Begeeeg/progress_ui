@@ -22,6 +22,7 @@ import { Button } from "@/shared/components/ui/Button";
 import TaskBoard from "@/features/progress/tasks/components/TaskBoard";
 import ProjectFormDialog from "./ProjectFormDialog";
 import ProjectNameConfirmationDialog from "./ProjectNameConfirmationDialog";
+import ProjectTaskAnalytics from "./ProjectTaskAnalytics";
 
 export default function ProjectDetailPage({
   project,
@@ -80,17 +81,18 @@ export default function ProjectDetailPage({
   }
 
   return (
-    <DashboardLayout username={userName}>
-      <div className="space-y-8">
-        <Link
-          href="/home"
-          className="inline-flex items-center gap-2 text-sm font-medium text-ink-dim transition hover:text-(--secondary)"
-        >
-          <ArrowLeft size={16} /> All projects
-        </Link>
-        <section className="overflow-hidden rounded-3xl border border-line bg-surface">
-          <div className="h-2 bg-(image:--gradient-primary)" />
-          <div className="p-5 sm:p-8">
+    <DashboardLayout username={userName} fillViewport>
+      <div className="grid h-full min-h-0 grid-rows-[minmax(0,0.9fr)_minmax(0,1.4fr)] gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] md:grid-rows-1">
+        <div className="flex min-h-0 flex-col gap-3">
+          <Link
+            href="/home"
+            className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-ink-dim transition hover:text-(--secondary)"
+          >
+            <ArrowLeft size={16} /> All projects
+          </Link>
+          <section className="min-h-0 flex-1 overflow-hidden rounded-3xl border border-line bg-surface">
+            <div className="h-2 bg-(image:--gradient-primary)" />
+            <div className="flex min-h-full flex-col p-5 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-(--secondary)/10 text-(--secondary)">
@@ -179,8 +181,12 @@ export default function ProjectDetailPage({
                 </a>
               )}
             </div>
-          </div>
-        </section>
+            <div className="mt-auto pt-6">
+              <ProjectTaskAnalytics projectId={project.id} />
+            </div>
+            </div>
+          </section>
+        </div>
         <TaskBoard project={project} userId={userId} />
       </div>
       {editDialogOpen && (

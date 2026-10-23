@@ -138,8 +138,8 @@ export default function TaskBoard({
   const completedCount = tasks.filter((task) => task.status === "completed").length;
 
   return (
-    <section className="space-y-5">
-      <div className="flex items-center justify-between gap-4">
+    <section className="flex h-full min-h-0 flex-col">
+      <div className="mb-4 flex shrink-0 items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-ink">Tasks</h2>
           <p className="mt-1 text-sm text-ink-dim">
@@ -153,44 +153,46 @@ export default function TaskBoard({
         ) : null}
       </div>
 
-      {loading ? (
-        <LoadingState label="Loading tasks..." />
-      ) : error ? (
-        <p role="alert" className="rounded-2xl bg-red-500/5 p-5 text-sm text-red-700">
-          {error}{" "}
-          <button onClick={() => void loadTasks()} className="font-semibold underline">
-            Try again
-          </button>
-        </p>
-      ) : tasks.length ? (
-        <div className="space-y-3">
-          {tasks.map((task) => (
-            <TaskListItem
-              key={task.id}
-              task={task}
-              onStatusChange={(item, status) => void changeStatus(item, status)}
-              onEdit={(item) => {
-                setEditingTask(item);
-                setDialogOpen(true);
-              }}
-              onDelete={(item) => setTaskAction({ task: item, action: "delete" })}
-              onLeave={(item) => setTaskAction({ task: item, action: "leave" })}
-              canLeave={isTaskAssignedToUser(task, userId)}
-            />
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          icon={<ListTodo size={22} />}
-          title="No tasks yet"
-          description="Break your project into small, clear next steps."
-          action={
-            <Button onClick={() => setDialogOpen(true)}>
-              <Plus size={16} /> Add the first task
-            </Button>
-          }
-        />
-      )}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
+        {loading ? (
+          <LoadingState label="Loading tasks..." />
+        ) : error ? (
+          <p role="alert" className="rounded-2xl bg-red-500/5 p-5 text-sm text-red-700">
+            {error}{" "}
+            <button onClick={() => void loadTasks()} className="font-semibold underline">
+              Try again
+            </button>
+          </p>
+        ) : tasks.length ? (
+          <div className="space-y-3">
+            {tasks.map((task) => (
+              <TaskListItem
+                key={task.id}
+                task={task}
+                onStatusChange={(item, status) => void changeStatus(item, status)}
+                onEdit={(item) => {
+                  setEditingTask(item);
+                  setDialogOpen(true);
+                }}
+                onDelete={(item) => setTaskAction({ task: item, action: "delete" })}
+                onLeave={(item) => setTaskAction({ task: item, action: "leave" })}
+                canLeave={isTaskAssignedToUser(task, userId)}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={<ListTodo size={22} />}
+            title="No tasks yet"
+            description="Break your project into small, clear next steps."
+            action={
+              <Button onClick={() => setDialogOpen(true)}>
+                <Plus size={16} /> Add the first task
+              </Button>
+            }
+          />
+        )}
+      </div>
 
       {dialogOpen && (
         <TaskFormDialog
