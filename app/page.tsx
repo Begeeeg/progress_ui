@@ -7,17 +7,19 @@ import HowItWorks from "@/features/landing/components/HowItWorks";
 import Navbar from "@/shared/components/layout/Navbar";
 
 export default function page() {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <HowItWorks />
-        <Developer />
-        <CTASection />
-      </main>
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Navbar />
+            <main>
+                <Hero />
+                <Features />
+                <HowItWorks />
+                <Developer />
+                <CTASection />
+            </main>
+            <Footer />
+        </>
+    );
 }
+
+//test
